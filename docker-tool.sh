@@ -37,7 +37,7 @@ done
 
 
 test_docker_image() {
-     docker run -d --name "$1" -p 127.0.0.1:9998:9998 apache/tika:"$1"
+     docker run -d --name "$1" -p 127.0.0.1:9998:9998 us.gcr.io/sl-web-mining/tika/tika-ocr:"$1"
      sleep 10
      url=http://localhost:9998/
      status=$(curl --head --location --connect-timeout 5 --write-out %{http_code} --silent --output /dev/null ${url})
@@ -45,9 +45,9 @@ test_docker_image() {
 
      if [[ $status == '200' ]]
      then
-      echo "$(tput setaf 2)Image: apache/tika:${1} - Basic test passed$(tput sgr0)"
+      echo "$(tput setaf 2)Image: us.gcr.io/sl-web-mining/tika/tika-ocr:${1} - Basic test passed$(tput sgr0)"
      else
-      echo "$(tput setaf 1)Image: apache/tika:${1} - Basic test failed$(tput sgr0)"
+      echo "$(tput setaf 1)Image: us.gcr.io/sl-web-mining/tika/tika-ocr:${1} - Basic test failed$(tput sgr0)"
       docker kill "$1"
       docker rm "$1"
       exit 1
@@ -56,11 +56,11 @@ test_docker_image() {
      #now test that the user is correctly set
      if [[ $user == '35002:35002' ]]
       then
-       echo "$(tput setaf 2)Image: apache/tika:${1} - User passed$(tput sgr0)"
+       echo "$(tput setaf 2)Image: us.gcr.io/sl-web-mining/tika/tika-ocr:${1} - User passed$(tput sgr0)"
        docker kill "$1"
        docker rm "$1"
       else
-       echo "$(tput setaf 1)Image: apache/tika:${1} - User failed$(tput sgr0)"
+       echo "$(tput setaf 1)Image: us.gcr.io/sl-web-mining/tika/tika-ocr:${1} - User failed$(tput sgr0)"
         docker kill "$1"
         docker rm "$1"
         exit 1
@@ -76,9 +76,9 @@ tika_version=$1; shift
 case "$subcommand" in
   build)
     # Build slim tika- with minimal dependencies
-    docker build -t apache/tika:${tika_docker_version} --build-arg TIKA_VERSION=${tika_version} - < minimal/Dockerfile --no-cache
+    docker build -t us.gcr.io/sl-web-mining/tika/tika-ocr:${tika_docker_version} --build-arg TIKA_VERSION=${tika_version} - < minimal/Dockerfile --no-cache
     # Build full tika- with OCR, Fonts and GDAL
-    docker build -t apache/tika:${tika_docker_version}-full --build-arg TIKA_VERSION=${tika_version} - < full/Dockerfile --no-cache
+    docker build -t us.gcr.io/sl-web-mining/tika/tika-ocr:${tika_docker_version}-full --build-arg TIKA_VERSION=${tika_version} - < full/Dockerfile --no-cache
     ;;
 
   test)
@@ -89,16 +89,16 @@ case "$subcommand" in
 
   publish)
     # Push the build images
-    docker push apache/tika:${tika_docker_version}
-    docker push apache/tika:${tika_docker_version}-full
+    docker push us.gcr.io/sl-web-mining/tika/tika-ocr:${tika_docker_version}
+    docker push us.gcr.io/sl-web-mining/tika/tika-ocr:${tika_docker_version}-full
     ;;
 
   latest)
     # Update the latest tags to point to supplied tika-
-    docker tag apache/tika:${tika_docker_version} apache/tika:latest
-    docker push apache/tika:latest
-    docker tag apache/tika:${tika_docker_version}-full apache/tika:latest-full
-    docker push apache/tika:latest-full
+    docker tag us.gcr.io/sl-web-mining/tika/tika-ocr:${tika_docker_version} us.gcr.io/sl-web-mining/tika/tika-ocr:latest
+    docker push us.gcr.io/sl-web-mining/tika/tika-ocr:latest
+    docker tag us.gcr.io/sl-web-mining/tika/tika-ocr:${tika_docker_version}-full us.gcr.io/sl-web-mining/tika/tika-ocr:latest-full
+    docker push us.gcr.io/sl-web-mining/tika/tika-ocr:latest-full
     ;;
 
 esac
