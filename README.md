@@ -179,3 +179,7 @@ There have been a range of [contributors](https://github.com/apache/tika-docker/
 ## Disclaimer
 
 It is worth noting that whilst these Docker images download the binary JARs published by the Apache Tika Team on the Apache Software Foundation distribution sites, only the source release of an Apache Software Foundation project is an official release artefact. See [Release Distribution Policy](https://www.apache.org/dev/release-distribution.html) for more details.
+
+
+# Run
+docker run -d --restart unless-stopped -p 127.0.0.1:9997:9997 -p 127.0.0.1:9998:9998 -v `pwd`/tika-config.xml:/tika-config.xml us.gcr.io/sl-web-mining/tika/tika-ocr:2.7.0-full --config /tika-config.xml  

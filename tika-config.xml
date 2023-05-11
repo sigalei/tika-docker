@@ -3,6 +3,7 @@
   <!--See https://cwiki.apache.org/confluence/display/TIKA/TikaServer+in+Tika+2.x -->
   <server>
     <params>
+      <port>9997-9998</port>
       <!-- If set to 'true', this runs tika server "in process"
           in the legacy 1.x mode.
           This means that the server will be susceptible to infinite loops
@@ -17,8 +18,22 @@
           the forked parser. Not allowed if noFork=true. -->
       <taskTimeoutMillis>3600000</taskTimeoutMillis>
       <forkedJvmArgs>
-        <arg>-Xmx2g</arg>
+        <arg>-Xmx1536M</arg>
       </forkedJvmArgs> 
     </params>
   </server>
+  <parsers>
+      <parser class="org.apache.tika.parser.DefaultParser">
+        <!-- comment this parser-exclude tag to activate OCR parser -->
+        <parser-exclude class="org.apache.tika.parser.ocr.TesseractOCRParser" />
+      </parser>
+      <parser class="org.apache.tika.parser.DefaultParser">
+          <parser-exclude class="org.apache.tika.parser.ocr.TesseractOCRParser" />
+      </parser>
+      <parser class="org.apache.tika.parser.ocr.TesseractOCRParser">
+          <params>
+              <param name="timeoutSeconds" type="int">300</param>
+          </params>
+      </parser>
+  </parsers>
 </properties>
